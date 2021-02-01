@@ -1,0 +1,28 @@
+{
+  "name": "ryder-cli-proto",
+  "version": "0.0.1",
+  "description": "",
+  "main": "src/index.js",
+  "bin": {
+    "ryder-cli-proto": "./src/index.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Light-Labs/ryder-cli-proto.git"
+  },
+  "author": "Marvin Janssen",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Light-Labs/ryder-cli-proto/issues"
+  },
+  "homepage": "https://github.com/Light-Labs/ryder-cli-proto#readme",
+  "dependencies": {
+    "inquirer": "^7.3.3",
+    "node-fetch": "^2.6.1",
+    "ryderserial-proto": "git+https://github.com/Light-Labs/ryderserial-proto.git",
+    "yargs": "^16.2.0"
+  }
+}
