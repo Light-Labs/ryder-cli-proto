@@ -57,6 +57,7 @@ yargs(hideBin(process.argv))
 			});
 		})
 	.commandDir('cmds')
+	.option('ryder-port',{describe:'Ryder serial port path',type:'string'})
 	.help()
 	.usage(usage)
 	.argv;
