@@ -38,9 +38,9 @@ yargs(hideBin(process.argv))
 			});
 		return new Promise(resolve =>
 			{
-			argv._ryder_serial.on('failed',() =>
+			argv._ryder_serial.on('failed',error =>
 				{
-				console.log('Could not connect to the Ryder on the specified port. Wrong port or it is currently in use.');
+				console.log('Could not connect to the Ryder on the specified port. Wrong port or it is currently in use. The error was:',error);
 				process.exit();
 				});
 			argv._ryder_serial.on('open',async () =>
