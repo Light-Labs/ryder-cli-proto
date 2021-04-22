@@ -4,12 +4,10 @@ A basic command-line interface to manage Ryder prototype devices. It can be used
 
 ## Install
 
-Since this is a private repository, [GitHub SSH access](https://docs.github.com/en/github/authenticating-to-github/connecting-to-github-with-ssh) has to be enabled on your account.
-
 Directly:
 
 ```bash
-npm install -g git+https://github.com/Light-Labs/ryder-cli-proto.git
+npm install -g https://github.com/Light-Labs/ryder-cli-proto.git
 ```
 
 Or from a cloned repository:
