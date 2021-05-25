@@ -1,35 +1,22 @@
 {
-	"extends": "@tsconfig/recommended/tsconfig.json",
 	"compilerOptions": {
-		"target": "es5",
+		"declaration": true,
+		"importHelpers": true,
 		"module": "commonjs",
-		"lib": [
-			"es6",
-			"es2015",
-			"dom"
-		],
-		"declaration": false,
-		"outDir": "./dist",
-		"strict": true,
-		"types": [
-			"node"
-		],
 		"esModuleInterop": true,
-		"resolveJsonModule": true,
+		"outDir": "lib",
+		"rootDir": "src",
+		"strict": true,
+		"target": "es2017",
 		"typeRoots": [
 			"./node_modules/@types",
-			"./types/",
-			"./dist/types/"
-		],
-		"allowJs": true,
-		"declarationMap": false
+			"./dist/types/",
+		]
 	},
 	"include": [
-		"./src/**/*"
+		"src/**/*",
 	],
 	"exclude": [
-		"node_modules",
-		"scripts",
-		"dist"
+		"node_modules"
 	]
 }

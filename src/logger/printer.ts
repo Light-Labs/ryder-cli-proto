@@ -59,19 +59,19 @@ export class Printer {
     this._log("log" as LogLevel, message, extra);
   }
 
-  public static debug(message: string, extra?: Record<string, unknown>): void {
+  public static debug(message?: string, extra?: Record<string, unknown>): void {
     this._log(LogLevel.DEBUG, Printer.DEBUG(message), extra);
   }
 
-  public static info(message: string, extra?: Record<string, unknown>): void  {
+  public static info(message?: string, extra?: Record<string, unknown>): void  {
     this._log(LogLevel.INFO, Printer.INFO(message), extra);
   }
 
-  public static warn(message: string, extra?: Record<string, unknown>): void  {
+  public static warn(message?: string | Error, extra?: Record<string, unknown>): void  {
     this._log(LogLevel.WARN, Printer.WARN(message), extra);
   }
 
-  public static error(message: string, extra?: Record<string, unknown>): void {
+  public static error(message?: string, extra?: Record<string, unknown>): void {
     this._log(LogLevel.ERROR, Printer.ERROR(message), extra);
   }
 
@@ -91,21 +91,3 @@ export class Printer {
   }
 
 }
-
-function main() {
-  const data = { data: 1, hex: Buffer.from("1").toString("hex")};
-  Printer.debug("debug");
-  Printer.debug("debug", data)
-  Printer.info("info");
-  Printer.info("info", data);
-  Printer.log("log");
-  Printer.log("log", data);
-  Printer.warn("warn");
-  Printer.warn("warn", data);
-  Printer.error("error");
-  Printer.error("error", data);
-  Printer.print_welcome();
-  Printer.print_welcome(true);
-}
-
-main();

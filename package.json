@@ -3,13 +3,25 @@
   "version": "0.0.1",
   "description": "",
   "main": "dist/src/index.js",
-  "bin": {
-    "ryder-cli-proto": "./dist/src/index.js"
+  "oclif": {
+    "commands": "./lib/commands",
+    "bin": "ryder-cli-proto",
+    "plugins": [
+      "@oclif/plugin-help"
+    ]
   },
+  "bin": {
+    "ryder-cli-proto": "./bin/run"
+  },
+  "files": [
+    "/bin",
+    "/lib",
+    "/npm-shrinkwrap.json",
+    "/oclif.manifest.json"
+  ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "uninstall": "./scripts/uninstall.js",
-    "start": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/index.ts",
     "build": "tsc -p .",
     "local": "npm i -g . && ryder-cli-proto",
     "refresh": "rm -rf ./node_modules ./package-lock.json && npm install"
@@ -25,24 +37,19 @@
   },
   "homepage": "https://github.com/Light-Labs/ryder-cli-proto#readme",
   "dependencies": {
-    "chalk": "^4.1.1",
-    "clear": "^0.1.0",
-    "commander": "^7.2.0",
-    "figlet": "^1.5.0",
-    "inquirer": "^7.3.3",
-    "node-fetch": "^2.6.1",
-    "path": "^0.12.7",
-    "ryderserial-proto": "github:Light-Labs/ryderserial-proto",
-    "yargs": "^16.2.0"
-  },
-  "devDependencies": {
-    "@tsconfig/recommended": "^1.0.1",
+    "@oclif/command": "^1.8.0",
+    "@oclif/config": "^1.17.0",
+    "@oclif/plugin-help": "^3.2.2",
     "@types/clear": "^0.1.1",
     "@types/figlet": "^1.5.1",
+    "chalk": "^2.4.2",
+    "clear": "^0.1.0",
+    "figlet": "^1.5.0",
+    "ryderserial-proto": "github:chazkiker2/ryderserial-proto#feature/ammend-type-deps",
+    "tslib": "^1.14.1"
+  },
+  "devDependencies": {
     "@types/node": "^15.6.1",
-    "@types/yargs": "^17.0.0",
-    "nodemon": "^2.0.7",
-    "ts-node": "^10.0.0",
     "typescript": "^4.2.4"
   }
 }
