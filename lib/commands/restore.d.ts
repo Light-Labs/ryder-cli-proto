@@ -7,6 +7,7 @@ export default class Restore extends RyderCommand {
         mnemonic: import("@oclif/parser/lib/flags").IOptionFlag<number | undefined>;
         seed: import("@oclif/parser/lib/flags").IOptionFlag<number | undefined>;
         ryder_port: flags.IOptionFlag<string>;
+        debug: import("@oclif/parser/lib/flags").IBooleanFlag<boolean>;
     };
     run(): Promise<void>;
 }

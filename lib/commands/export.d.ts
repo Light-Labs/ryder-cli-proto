@@ -6,6 +6,7 @@ export default class Export extends RyderCommand {
         help: import("@oclif/parser/lib/flags").IBooleanFlag<void>;
         private_key: flags.IOptionFlag<string | undefined>;
         ryder_port: flags.IOptionFlag<string>;
+        debug: import("@oclif/parser/lib/flags").IBooleanFlag<boolean>;
     };
     static strict: boolean;
     static args: ({

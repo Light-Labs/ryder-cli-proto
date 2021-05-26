@@ -4,6 +4,7 @@ export default abstract class RyderCommand extends Command {
     ryder_serial?: RyderSerial;
     static flags: {
         ryder_port: flags.IOptionFlag<string>;
+        debug: import("@oclif/parser/lib/flags").IBooleanFlag<boolean>;
     };
     init(): Promise<unknown>;
     finally(err?: Error): Promise<any>;

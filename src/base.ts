@@ -14,15 +14,21 @@ export default abstract class RyderCommand extends Command {
       multiple: false,
       env: "RYDERSERIAL_PORT",
       required: true
-    })
+    }),
+    debug: flags.boolean({char: "D"})
   }
 
   async init() {
     const { flags } = this.parse(this.ctor);
-    console.log({ flags });
-    const debug = process.env.RYDERSERIAL_DEBUG ? !!parseInt(process.env.RYDERSERIAL_DEBUG) : undefined
+    let debug;
+    if (process.env.RYDERSERIAL_DEBUG) {
+      debug = !!parseInt(process.env.RYDERSERIAL_DEBUG);
+    } else if (RyderCommand.flags.debug) {
+      debug = flags.debug;
+    } else {
+      debug = false;
+    }
     this.ryder_serial = new RyderSerial(flags.ryder_port, { debug });
-    // console.log({ flags, ryder_serial: this.ryder_serial });
     process.on('unhandledRejection', (error) => {
       console.error("unhandled rejection!", error);
       try {
@@ -40,10 +46,8 @@ export default abstract class RyderCommand extends Command {
         const response = await this.ryder_serial?.send(RyderSerial.COMMAND_INFO);
         const info = typeof response === "number" ? response.toString() : response;
         if (!info || info.substr(0,5) !== 'ryder') {
-          console.error(`Device at ${RyderCommand.flags.ryder_port} does not appear to be a Ryder device`);
-          process.exit(0);
+          this.error(`Device at ${RyderCommand.flags.ryder_port} does not appear to be a Ryder device`, {exit: 1});
         }
-        console.log({info})
         resolve(flags);
       });
       this.ryder_serial?.on('wait_user_confirm', () => console.log('Confirm or cancel on Ryder device.'));
@@ -52,7 +56,6 @@ export default abstract class RyderCommand extends Command {
 
   async finally(err?: Error) {
     const { flags } = this.parse(this.ctor);
-    console.log({flags});
     flags.ryder_serial?.close();
     return super.finally(err);
   }
