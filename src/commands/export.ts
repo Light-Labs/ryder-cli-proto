@@ -1,4 +1,4 @@
-import { Command, flags } from '@oclif/command'
+import { flags } from '@oclif/command'
 import RyderCommand from "../base";
 import RyderSerial from 'ryderserial-proto';
 
@@ -49,22 +49,18 @@ export default class Export extends RyderCommand {
       }
     }
     commands.push(args.id_number);
-    // TODO: the following behavior was refactored out of RyderSerial... maybe we need to add it back?
     let response = await this.ryder_serial.send(commands);
     if (args.what !== 'app_key') {
       console.log(response);
     }
-    // TODO: the following behavior was refactored out of RyderSerial... maybe we need to add it back?
-    /*
     else if (response !== RyderSerial.RESPONSE_SEND_INPUT) {
       console.log('Ryder did not request user input, it might doing something else or it is stuck in the wrong mode.');
     }
-    */
     else {
       response = await this.ryder_serial.send(args.app_domain+"\0");
-      console.log(response);
-      // TODO: the following behavior was refactored out of RyderSerial... maybe we need to add it back?
-      // if (response !== RyderSerial.RESPONSE_REJECTED) {}
+      if (response !== RyderSerial.RESPONSE_REJECTED) {
+        console.log(response);
+      }
     }
     this.ryder_serial.close();
   }

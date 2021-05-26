@@ -31,9 +31,9 @@ export declare class Printer {
     };
     private static _log;
     static log(message?: string, extra?: Record<string, unknown>): void;
-    static debug(message: string, extra?: Record<string, unknown>): void;
-    static info(message: string, extra?: Record<string, unknown>): void;
-    static warn(message: string, extra?: Record<string, unknown>): void;
-    static error(message: string, extra?: Record<string, unknown>): void;
+    static debug(message?: string, extra?: Record<string, unknown>): void;
+    static info(message?: string, extra?: Record<string, unknown>): void;
+    static warn(message?: string | Error, extra?: Record<string, unknown>): void;
+    static error(message?: string | Error, extra?: Record<string, unknown>): void;
     static print_welcome(disable_color?: boolean): void;
 }

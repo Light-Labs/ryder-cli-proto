@@ -42,7 +42,7 @@ export class Printer {
   static WARN = chalk.hex('#FFA500');
   static ERROR = chalk.red.bold;
 
-  private static _log(log_level: LogLevel, message?: string, extra?: Record<string, unknown>): void {
+  private static _log(log_level: LogLevel, message?: string | Error, extra?: Record<string, unknown>): void {
     if (extra) {
       console[log_level](message, extra);
       return;
@@ -60,19 +60,32 @@ export class Printer {
   }
 
   public static debug(message?: string, extra?: Record<string, unknown>): void {
-    this._log(LogLevel.DEBUG, Printer.DEBUG(message), extra);
+    this._log(LogLevel.DEBUG, message ? Printer.DEBUG(message) : "", extra);
   }
 
   public static info(message?: string, extra?: Record<string, unknown>): void  {
-    this._log(LogLevel.INFO, Printer.INFO(message), extra);
+    const msg = message ? Printer.INFO(message) : "";
+    this._log(LogLevel.INFO, msg, extra);
   }
 
   public static warn(message?: string | Error, extra?: Record<string, unknown>): void  {
-    this._log(LogLevel.WARN, Printer.WARN(message), extra);
+    let msg;
+    if (message) {
+      msg = typeof message === "string" ? Printer.WARN(message) : message;
+    } else {
+      msg = "";
+    }
+    this._log(LogLevel.WARN, msg, extra);
   }
 
-  public static error(message?: string, extra?: Record<string, unknown>): void {
-    this._log(LogLevel.ERROR, Printer.ERROR(message), extra);
+  public static error(message?: string | Error, extra?: Record<string, unknown>): void {
+    let msg;
+    if (message) {
+      msg = typeof message === "string" ? Printer.ERROR(message) : message;
+    } else {
+      msg = "";
+    }
+    this._log(LogLevel.ERROR, msg, extra);
   }
 
   public static print_welcome(disable_color=false) {

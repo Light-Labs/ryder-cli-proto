@@ -1,6 +1,6 @@
 import { flags } from '@oclif/command';
 import RyderCommand from "../base";
-export default class Hello extends RyderCommand {
+export default class Info extends RyderCommand {
     static description: string;
     static examples: string[];
     static flags: {

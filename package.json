@@ -45,7 +45,7 @@
     "chalk": "^2.4.2",
     "clear": "^0.1.0",
     "figlet": "^1.5.0",
-    "ryderserial-proto": "github:chazkiker2/ryderserial-proto#feature/ammend-type-deps",
+    "ryderserial-proto": "github:Light-Labs/ryderserial-proto",
     "tslib": "^1.14.1"
   },
   "devDependencies": {

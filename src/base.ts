@@ -1,4 +1,5 @@
 import Command, { flags } from "@oclif/command";
+import { info } from "console";
 import RyderSerial from "ryderserial-proto";
 import { Printer } from "./logger";
 
@@ -36,7 +37,8 @@ export default abstract class RyderCommand extends Command {
         process.exit();
       });
       this.ryder_serial?.on('open', async () => {
-        const info = await this.ryder_serial?.send(RyderSerial.COMMAND_INFO);
+        const response = await this.ryder_serial?.send(RyderSerial.COMMAND_INFO);
+        const info = typeof response === "number" ? response.toString() : response;
         if (!info || info.substr(0,5) !== 'ryder') {
           console.error(`Device at ${RyderCommand.flags.ryder_port} does not appear to be a Ryder device`);
           process.exit(0);

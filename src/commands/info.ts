@@ -21,7 +21,8 @@ export default class Info extends RyderCommand {
     if (!this.ryder_serial) {
       return;
     }
-    const info = await this.ryder_serial.send(RyderSerial.COMMAND_INFO);
+    const response = await this.ryder_serial.send(RyderSerial.COMMAND_INFO);
+    const info = typeof response === "number" ? response.toString() : response;
     this.log(`${!!info.charCodeAt(9) ? 'I' : 'Uni'}nitialised Ryder FW version ${info.charCodeAt(5)}.${info.charCodeAt(6)}.${info.charCodeAt(7)} on ${chalk.yellow(flags.ryder_port)}`
     );
 	  this.ryder_serial.close();
