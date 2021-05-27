@@ -1,27 +1,27 @@
-import chalk from 'chalk';
-import clear from 'clear';
-import figlet from 'figlet';
+import chalk from "chalk";
+import clear from "clear";
+import figlet from "figlet";
 
 // just a handful of the few fonts I liked for a `Ryder CLI` banner message
 // kinda fun. super unnecessary.
 const cool_fonts = [
-  "Electronic",
-  "Nancyj-Fancy",
-  "Nancyj-Underlined",
-  "Nancyj",
-  "Rowan Cap",
-  "Rounded",
-  "Train", // lol
-  "Whimsy",
-  "Univers",
-]
+    "Electronic",
+    "Nancyj-Fancy",
+    "Nancyj-Underlined",
+    "Nancyj",
+    "Rowan Cap",
+    "Rounded",
+    "Train", // lol
+    "Whimsy",
+    "Univers",
+];
 
 export const enum LogLevel {
-  TRACE = "trace",
-  DEBUG = "debug",
-  INFO = "info",
-  WARN = "warn",
-  ERROR = "error",
+    TRACE = "trace",
+    DEBUG = "debug",
+    INFO = "info",
+    WARN = "warn",
+    ERROR = "error",
 }
 
 /**
@@ -36,71 +36,74 @@ export const enum LogLevel {
  * @alpha
  */
 export class Printer {
-  // TRACE & LOG are not colored.
-  static DEBUG = chalk.yellow;
-  static INFO = chalk.blueBright;
-  static WARN = chalk.hex('#FFA500');
-  static ERROR = chalk.red.bold;
+    // TRACE & LOG are not colored.
+    static DEBUG = chalk.yellow;
+    static INFO = chalk.blueBright;
+    static WARN = chalk.hex("#FFA500");
+    static ERROR = chalk.red.bold;
 
-  private static _log(log_level: LogLevel, message?: string | Error, extra?: Record<string, unknown>): void {
-    if (extra) {
-      console[log_level](message, extra);
-      return;
+    private static _log(
+        log_level: LogLevel,
+        message?: string | Error,
+        extra?: Record<string, unknown>
+    ): void {
+        if (extra) {
+            console[log_level](message, extra);
+            return;
+        }
+        if (message) {
+            console[log_level](message);
+            return;
+        }
+        console[log_level]();
     }
-    if (message) {
-      console[log_level](message);
-      return;
+
+    public static log(message?: string, extra?: Record<string, unknown>) {
+        // hackish work-around b/c this will change as soon as I implement a real logger.
+        this._log("log" as LogLevel, message, extra);
     }
-    console[log_level]();
-  }
 
-  public static log(message?: string, extra?: Record<string, unknown>) {
-    // hackish work-around b/c this will change as soon as I implement a real logger.
-    this._log("log" as LogLevel, message, extra);
-  }
-
-  public static debug(message?: string, extra?: Record<string, unknown>): void {
-    this._log(LogLevel.DEBUG, message ? Printer.DEBUG(message) : "", extra);
-  }
-
-  public static info(message?: string, extra?: Record<string, unknown>): void  {
-    const msg = message ? Printer.INFO(message) : "";
-    this._log(LogLevel.INFO, msg, extra);
-  }
-
-  public static warn(message?: string | Error, extra?: Record<string, unknown>): void  {
-    let msg;
-    if (message) {
-      msg = typeof message === "string" ? Printer.WARN(message) : message;
-    } else {
-      msg = "";
+    public static debug(message?: string, extra?: Record<string, unknown>): void {
+        this._log(LogLevel.DEBUG, message ? Printer.DEBUG(message) : "", extra);
     }
-    this._log(LogLevel.WARN, msg, extra);
-  }
 
-  public static error(message?: string | Error, extra?: Record<string, unknown>): void {
-    let msg;
-    if (message) {
-      msg = typeof message === "string" ? Printer.ERROR(message) : message;
-    } else {
-      msg = "";
+    public static info(message?: string, extra?: Record<string, unknown>): void {
+        const msg = message ? Printer.INFO(message) : "";
+        this._log(LogLevel.INFO, msg, extra);
     }
-    this._log(LogLevel.ERROR, msg, extra);
-  }
 
-  public static print_welcome(disable_color=false) {
-    clear();
-    const welcome_banner_no_color = figlet.textSync("Ryder CLI", {
-      font: "Univers",
-      horizontalLayout: 'full',
-      whitespaceBreak: true
-    });
-    const welcome_banner = disable_color
-      ? welcome_banner_no_color
-      : chalk`{yellow.bold.bgBlue ${welcome_banner_no_color}}`;
-    console.log(welcome_banner)
-    !disable_color && chalk.reset();
-    console.log();
-  }
+    public static warn(message?: string | Error, extra?: Record<string, unknown>): void {
+        let msg;
+        if (message) {
+            msg = typeof message === "string" ? Printer.WARN(message) : message;
+        } else {
+            msg = "";
+        }
+        this._log(LogLevel.WARN, msg, extra);
+    }
 
+    public static error(message?: string | Error, extra?: Record<string, unknown>): void {
+        let msg;
+        if (message) {
+            msg = typeof message === "string" ? Printer.ERROR(message) : message;
+        } else {
+            msg = "";
+        }
+        this._log(LogLevel.ERROR, msg, extra);
+    }
+
+    public static print_welcome(disable_color = false) {
+        clear();
+        const welcome_banner_no_color = figlet.textSync("Ryder CLI", {
+            font: "Univers",
+            horizontalLayout: "full",
+            whitespaceBreak: true,
+        });
+        const welcome_banner = disable_color
+            ? welcome_banner_no_color
+            : chalk`{yellow.bold.bgBlue ${welcome_banner_no_color}}`;
+        console.log(welcome_banner);
+        !disable_color && chalk.reset();
+        console.log();
+    }
 }
