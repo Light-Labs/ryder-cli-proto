@@ -7,7 +7,7 @@ A basic command-line interface to manage Ryder prototype devices. It can be used
 Directly:
 
 ```bash
-npm install -g https://github.com/Light-Labs/ryder-cli-proto.git
+npm install -g ryder-cli-proto
 ```
 
 Or from a cloned repository:
@@ -27,7 +27,7 @@ npm uninstall -g ryder-cli-proto
 
 Every command requires you to pass the Ryder serial port. You can pass it using `--ryder-port /dev/ttyUSB` or by setting the enviroment variable `RYDER_PORT=/dev/ttyUSB` where `/dev/ttyUSB` is the path to the Ryder serial port. The port name depends on your operating system, for Linux it is likely `/dev/ttyUSB*` and on macOS it is `/dev/cu.usbserial-*`.
 
-Print help using `ryder-cli-proto --help`. 
+Print help using `ryder-cli-proto --help`.
 
 ```
 Commands:
