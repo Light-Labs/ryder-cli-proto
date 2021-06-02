@@ -2,7 +2,6 @@
     "name": "ryder-cli-proto",
     "version": "0.0.2",
     "description": "",
-    "main": "dist/src/index.js",
     "oclif": {
         "commands": "./lib/commands",
         "bin": "ryder-cli-proto",
@@ -23,9 +22,7 @@
         "node": ">=8.0.0"
     },
     "scripts": {
-        "postpack": "rm -f oclif.manifest.json",
-        "posttest": "eslint . --ext .ts --config .eslintrc",
-        "prepack": "rm -rf lib && tsc -b && oclif-dev manifest && oclif-dev readme",
+        "prepare": "rm -rf lib && tsc -p .",
         "test": "mocha --require ts-node/register \"test/**/*.test.ts\"",
         "prettier": "prettier --write .",
         "lint": "prettier --check . && eslint . --ext .ts --quiet",
