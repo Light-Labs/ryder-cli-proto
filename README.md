@@ -49,18 +49,6 @@ USAGE
 ...
 ```
 <!-- usagestop -->
-```sh-session
-$ npm install -g @lightlabs/ryder-cli-proto
-$ ryder-cli-proto COMMAND
-running command...
-$ ryder-cli-proto (-v|--version|version)
-@lightlabs/ryder-cli-proto/0.0.3 darwin-x64 node-v16.0.0
-$ ryder-cli-proto --help [COMMAND]
-USAGE
-  $ ryder-cli-proto COMMAND
-...
-```
-<!-- usage stop -->
 
 # Commands
 
