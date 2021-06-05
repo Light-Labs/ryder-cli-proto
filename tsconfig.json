@@ -3,9 +3,9 @@
         "declaration": true,
         "importHelpers": true,
         "module": "commonjs",
+        "moduleResolution": "node",
         "esModuleInterop": true,
         "outDir": "lib",
-        // "rootDir": "src",
         "strict": true,
         "target": "es2017",
         "typeRoots": ["./node_modules/@types", "./dist/types/"]
