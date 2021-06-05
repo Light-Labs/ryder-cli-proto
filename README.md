@@ -1,13 +1,15 @@
-# Ryder Prototype CLI
+# Ryder CLI Prototype
 
-A basic command-line interface to manage Ryder prototype devices. It can be used to setup & restore, upgrade & downgrade firmware, and to export identities, app keys, and owner keys from Ryder devices. The code is also a good reference to see how `RyderSerial` works.
+[![npm version](https://img.shields.io/npm/v/@lightlabs/ryder-cli-proto.svg?style=flat)](https://www.npmjs.com/package/@lightlabs/ryder-cli-proto)
+
+A basic command-line interface to manage Ryder prototype devices. It can be used to setup & restore, upgrade & downgrade firmware, and to export identities, app keys, and owner keys from Ryder devices. The code is also a good reference to see how the [ryder-serial](https://github.com/Light-Labs/ryderserial-proto) works.
 
 ## Install
 
 Directly:
 
 ```bash
-npm install -g ryder-cli-proto
+npm install -g @lightlabs/ryder-cli-proto
 ```
 
 Or from a cloned repository:
