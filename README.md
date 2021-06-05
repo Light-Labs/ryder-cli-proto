@@ -4,7 +4,16 @@
 
 A basic command-line interface to manage Ryder prototype devices. It can be used to setup & restore, upgrade & downgrade firmware, and to export identities, app keys, and owner keys from Ryder devices. The code is also a good reference to see how the [ryder-serial](https://github.com/Light-Labs/ryderserial-proto) works.
 
-## Install
+<!-- toc -->
+* [Ryder CLI Prototype](#ryder-cli-prototype)
+* [Install](#install)
+* [Usage](#usage)
+* [Commands](#commands)
+* [Firmware](#firmware)
+* [Contributing](#contributing)
+<!-- tocstop -->
+
+# Install
 
 Directly:
 
@@ -25,31 +34,196 @@ Uninstall:
 npm uninstall -g ryder-cli-proto
 ```
 
-## Usage
+# Usage
 
-Every command requires you to pass the Ryder serial port. You can pass it using `--ryder-port /dev/ttyUSB` or by setting the enviroment variable `RYDER_PORT=/dev/ttyUSB` where `/dev/ttyUSB` is the path to the Ryder serial port. The port name depends on your operating system, for Linux it is likely `/dev/ttyUSB*` and on macOS it is `/dev/cu.usbserial-*`.
+<!-- usage -->
+```sh-session
+$ npm install -g @lightlabs/ryder-cli-proto
+$ ryder-cli-proto COMMAND
+running command...
+$ ryder-cli-proto (-v|--version|version)
+@lightlabs/ryder-cli-proto/0.0.3 darwin-x64 node-v16.0.0
+$ ryder-cli-proto --help [COMMAND]
+USAGE
+  $ ryder-cli-proto COMMAND
+...
+```
+<!-- usagestop -->
+```sh-session
+$ npm install -g @lightlabs/ryder-cli-proto
+$ ryder-cli-proto COMMAND
+running command...
+$ ryder-cli-proto (-v|--version|version)
+@lightlabs/ryder-cli-proto/0.0.3 darwin-x64 node-v16.0.0
+$ ryder-cli-proto --help [COMMAND]
+USAGE
+  $ ryder-cli-proto COMMAND
+...
+```
+<!-- usage stop -->
 
-Print help using `ryder-cli-proto --help`.
+# Commands
+
+<!-- commands -->
+* [`ryder-cli-proto erase`](#ryder-cli-proto-erase)
+* [`ryder-cli-proto export WHAT ID_NUMBER [APP_DOMAIN]`](#ryder-cli-proto-export-what-id_number-app_domain)
+* [`ryder-cli-proto firmware ACTION [VER]`](#ryder-cli-proto-firmware-action-ver)
+* [`ryder-cli-proto help [COMMAND]`](#ryder-cli-proto-help-command)
+* [`ryder-cli-proto info`](#ryder-cli-proto-info)
+* [`ryder-cli-proto restore`](#ryder-cli-proto-restore)
+* [`ryder-cli-proto setup`](#ryder-cli-proto-setup)
+* [`ryder-cli-proto wake`](#ryder-cli-proto-wake)
+
+## `ryder-cli-proto erase`
+
+Erase a Ryder.
 
 ```
-Commands:
-  ryder-cli-proto erase                     Erase a Ryder.
-  ryder-cli-proto export <what> <identity   Export an identity or key from a
-  number> [app domain]                      Ryder.
-  ryder-cli-proto firmware <action> [ver]   Manage firmware versions.
-  ryder-cli-proto info                      Read Ryder device information.
-  ryder-cli-proto restore                   Restore a Ryder using a mnemonic
-                                            phrase. Use --mnemonic to specify
-                                            the number of words.
-  ryder-cli-proto setup                     Initialise a Ryder.
-  ryder-cli-proto wake                      Wake up.
+USAGE
+  $ ryder-cli-proto erase
 
-Options:
-  --version  Show version number                                       [boolean]
-  --help     Show help                                                 [boolean]
+OPTIONS
+  -D, --debug
+  -R, --ryder_port=ryder_port  (required) port of ryder device to connect to
+  -h, --help                   show CLI help
 ```
 
-## Firmware
+_See code: [src/commands/erase.ts](https://github.com/Light-Labs/ryder-cli-proto/blob/v0.0.3/src/commands/erase.ts)_
+
+## `ryder-cli-proto export WHAT ID_NUMBER [APP_DOMAIN]`
+
+Export an identity or key from a Ryder
+
+```
+USAGE
+  $ ryder-cli-proto export WHAT ID_NUMBER [APP_DOMAIN]
+
+ARGUMENTS
+  WHAT        (identity|owner_key|app_key) what to export
+  ID_NUMBER   identity number of thing to export
+  APP_DOMAIN  Required when exporting an app key
+
+OPTIONS
+  -D, --debug
+  -R, --ryder_port=ryder_port    (required) port of ryder device to connect to
+  -h, --help                     show CLI help
+  -k, --private_key=private_key  Include private key (if available)
+```
+
+_See code: [src/commands/export.ts](https://github.com/Light-Labs/ryder-cli-proto/blob/v0.0.3/src/commands/export.ts)_
+
+## `ryder-cli-proto firmware ACTION [VER]`
+
+Manage firmware versions.
+
+```
+USAGE
+  $ ryder-cli-proto firmware ACTION [VER]
+
+ARGUMENTS
+  ACTION  (fetch|download|list|install|version)
+  VER     only required on download or install
+
+OPTIONS
+  -D, --debug
+  -R, --ryder_port=ryder_port  (required) port of ryder device to connect to
+  -h, --help                   show CLI help
+```
+
+_See code: [src/commands/firmware.ts](https://github.com/Light-Labs/ryder-cli-proto/blob/v0.0.3/src/commands/firmware.ts)_
+
+## `ryder-cli-proto help [COMMAND]`
+
+display help for ryder-cli-proto
+
+```
+USAGE
+  $ ryder-cli-proto help [COMMAND]
+
+ARGUMENTS
+  COMMAND  command to show help for
+
+OPTIONS
+  --all  see all commands in CLI
+```
+
+_See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v3.2.2/src/commands/help.ts)_
+
+## `ryder-cli-proto info`
+
+Read Ryder device information.
+
+```
+USAGE
+  $ ryder-cli-proto info
+
+OPTIONS
+  -D, --debug
+  -R, --ryder_port=ryder_port  (required) port of ryder device to connect to
+  -h, --help                   show CLI help
+
+EXAMPLES
+  $ ryder-cli-proto info -R "/dev/ttys003"
+  hello world from ./src/hello.ts!
+
+  $ ryder-cli-proto info --ryder-port "/dev/ttys003"
+  Initialised Ryder FW version 0.0.2 on /dev/ttys003
+```
+
+_See code: [src/commands/info.ts](https://github.com/Light-Labs/ryder-cli-proto/blob/v0.0.3/src/commands/info.ts)_
+
+## `ryder-cli-proto restore`
+
+describe the command here
+
+```
+USAGE
+  $ ryder-cli-proto restore
+
+OPTIONS
+  -D, --debug
+  -R, --ryder_port=ryder_port  (required) port of ryder device to connect to
+  -h, --help                   show CLI help
+  --mnemonic=12|18|24          12, 18, or 24 word mnemonic seed phrase
+  --seed=seed                  seed as a number
+```
+
+_See code: [src/commands/restore.ts](https://github.com/Light-Labs/ryder-cli-proto/blob/v0.0.3/src/commands/restore.ts)_
+
+## `ryder-cli-proto setup`
+
+Initialize a Ryder.
+
+```
+USAGE
+  $ ryder-cli-proto setup
+
+OPTIONS
+  -D, --debug
+  -R, --ryder_port=ryder_port  (required) port of ryder device to connect to
+  -h, --help                   show CLI help
+```
+
+_See code: [src/commands/setup.ts](https://github.com/Light-Labs/ryder-cli-proto/blob/v0.0.3/src/commands/setup.ts)_
+
+## `ryder-cli-proto wake`
+
+Wake up the Ryder.
+
+```
+USAGE
+  $ ryder-cli-proto wake
+
+OPTIONS
+  -D, --debug
+  -R, --ryder_port=ryder_port  (required) port of ryder device to connect to
+  -h, --help                   show CLI help
+```
+
+_See code: [src/commands/wake.ts](https://github.com/Light-Labs/ryder-cli-proto/blob/v0.0.3/src/commands/wake.ts)_
+<!-- commandsstop -->
+
+# Firmware
 
 Firmware files are downloaded by the CLI and then cached locally. The default cache directory is `~/.ryder/proto-v2/firmware`. The directory can be changed by setting the `RYDER_FIRMWARE_DIRECTORY` environment variable.
 
@@ -73,7 +247,7 @@ Install a firmware version:
 ryder-cli-proto firmware install 0.0.1
 ```
 
-## Contributing
+# Contributing
 
 1. Create a branch with the naming convention `first-name/feature-name`.
 2. Open a pull request and request a review of a fellow Pioneer.

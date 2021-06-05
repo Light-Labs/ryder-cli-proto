@@ -23,7 +23,8 @@
         "node": ">=8.0.0"
     },
     "scripts": {
-        "prepare": "npm run build",
+        "oclif-gen": "npx --yes @oclif/dev-cli readme",
+        "prepare": "npm run oclif-gen && npm run build",
         "test": "mocha --require ts-node/register \"test/**/*.test.ts\"",
         "prettier": "prettier --write .",
         "lint": "prettier --check . && eslint . --ext .ts --quiet",
