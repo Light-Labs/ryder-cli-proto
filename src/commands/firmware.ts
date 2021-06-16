@@ -1,4 +1,5 @@
 import { flags } from "@oclif/command";
+import { ParserOutput } from "@oclif/parser/lib/parse";
 import RyderCommand from "../base";
 import RyderSerial from "ryderserial-proto";
 import fs_default from "fs";
@@ -43,6 +44,17 @@ function verify_firmware(signature: string, firmware: crypto.BinaryLike): boolea
     return verifier.verify(firmware_dn_public_key, signature, "hex");
 }
 
+type FirmwareParseOutput = ParserOutput<
+    {
+        help: void;
+        ryder_port: string;
+        debug: boolean;
+    },
+    {
+        [name: string]: any;
+    }
+>;
+
 export default class Firmware extends RyderCommand {
     static description = "Manage firmware versions.";
 
@@ -66,11 +78,14 @@ export default class Firmware extends RyderCommand {
         },
     ];
 
-    async run() {
-        const { args, flags } = this.parse(Firmware);
+    async run(): Promise<void> {
+        const output: FirmwareParseOutput = this.parse(Firmware);
+        const { args } = output;
 
         if (
+            // if `firmware install` or `firmware download`
             (args.action === "install" || args.action === "download") &&
+            // then 3rd argument `ver` should be in format #.#.#
             !/^[0-9]+\.[0-9]+\.[0-9]+$/.test(args.ver)
         ) {
             this.error(new Error("Version should be in the format X.Y.Z"), { exit: 1 });
@@ -82,106 +97,105 @@ export default class Firmware extends RyderCommand {
             return;
         }
 
-        switch (args.action) {
-            case "fetch":
-                this.log("Fetching latest firmware versions");
-                const result = await fetch(firmware_dn + "/versions.json");
-                const json = await result.json();
-                this.log(Object.keys(json).join("\n"));
-                await fs.writeFile(versions_file, JSON.stringify(json), "utf8");
-                break;
+        const handler: { [name: string]: (output: FirmwareParseOutput) => Promise<void> } = {
+            fetch: this.handle_fetch.bind(this),
+            list: this.handle_list.bind(this),
+            download: this.handle_download.bind(this),
+            install: this.handle_install.bind(this),
+        };
+        await handler[args.action](output);
 
-            case "list":
-                const response = await this.ryder_serial.send(RyderSerial.COMMAND_INFO);
-                const info = typeof response === "number" ? response.toString() : response;
-                const current_version = `${info.charCodeAt(5)}.${info.charCodeAt(
-                    6
-                )}.${info.charCodeAt(7)}`;
-                const versions_list = await get_versions();
-                if (!versions_list) {
-                    this.log("No local firmware versions found, fetch first.");
-                } else {
-                    this.log(
-                        Object.keys(versions_list)
-                            .map(v => (v === current_version ? v + " (currently installed)" : v))
-                            .join("\n")
-                    );
-                }
-                break;
+        this.ryder_serial.close();
+    }
 
-            case "download":
-                const versions_download = await get_versions();
+    async handle_fetch(): Promise<void> {
+        this.log("Fetching latest firmware versions");
+        const result = await fetch(firmware_dn + "/versions.json");
+        const json = await result.json();
+        this.log(Object.keys(json).join("\n"));
+        await fs.writeFile(versions_file, JSON.stringify(json), "utf8");
+    }
 
-                if (!versions_download || !versions_download[args.ver]) {
-                    this.log("Unknown version. (Fetch?)");
-                    break;
-                }
+    async handle_list(): Promise<void> {
+        if (!this.ryder_serial) {
+            throw new Error("Ryder device is not connected.");
+        }
+        const response = await this.ryder_serial.send(RyderSerial.COMMAND_INFO);
+        const info = typeof response === "number" ? response.toString() : response;
+        const current_version = `${info.charCodeAt(5)}.${info.charCodeAt(6)}.${info.charCodeAt(7)}`;
+        const versions_list = await get_versions();
+        if (!versions_list) {
+            this.log("No local firmware versions found, fetch first.");
+        } else {
+            this.log(
+                Object.keys(versions_list)
+                    .map(v => (v === current_version ? v + " (currently installed)" : v))
+                    .join("\n")
+            );
+        }
+    }
 
-                const file = versions_download[args.ver].file;
-                const signature = versions_download[args.ver].signature;
-                this.log(`Downloading ${file}`);
-                const result_download = await fetch(firmware_dn + "/" + file);
-                const firmware = await result_download.buffer();
-                if (verify_firmware(signature, firmware)) {
-                    await fs.writeFile(path.join(ryder_firmware_directory, file), firmware);
-                } else {
-                    this.log(
-                        `Firmware signature invalid for version ${args.ver}, download failed.`
-                    );
-                }
-                break;
+    async handle_download(output: FirmwareParseOutput): Promise<void> {
+        const { args } = output;
+        const versions_download = await get_versions();
+        if (!versions_download || !versions_download[args.ver]) {
+            this.log("Unknown version. (Fetch?)");
+            return;
+        }
+        const file = versions_download[args.ver].file;
+        const signature = versions_download[args.ver].signature;
+        this.log(`Downloading ${file}`);
+        const result_download = await fetch(firmware_dn + "/" + file);
+        const firmware = await result_download.buffer();
+        if (verify_firmware(signature, firmware)) {
+            await fs.writeFile(path.join(ryder_firmware_directory, file), firmware);
+        } else {
+            this.log(`Firmware signature invalid for version ${args.ver}, download failed.`);
+        }
+    }
 
-            case "install":
-                const versions_install = await get_versions();
-                if (!versions_install || !versions_install[args.ver]) {
-                    this.log("Unknown version. (Fetch?)");
-                    break;
-                }
-                const file_path = path.join(
-                    ryder_firmware_directory,
-                    versions_install[args.ver].file
-                );
-                const signature_install = versions_install[args.ver].signature;
-                let firmware_install;
-                try {
-                    firmware_install = await fs.readFile(file_path);
-                } catch (error) {
-                    if (error.code === "ENOENT") {
-                        this.error(
-                            `Firmware file for version ${args.ver} not found, download first.`
-                        );
-                    } else {
-                        this.error(error);
-                    }
-                    break;
-                }
+    async handle_install(output: FirmwareParseOutput): Promise<void> {
+        if (!this.ryder_serial) {
+            return;
+        }
 
-                if (!verify_firmware(signature_install, firmware_install)) {
-                    this.log(
-                        `Firmware signature invalid for version ${args.ver}, refusing to install.`
-                    );
-                    break;
-                }
-                this.ryder_serial.close();
-                const esptool = spawn("esptool.py", [
-                    "-p",
-                    flags.ryder_port,
-                    "write_flash",
-                    "0x010000",
-                    file_path,
-                ]);
-                esptool.on("error", (error: Error) => {
-                    if (error.name === "ENOENT") {
-                        this.log(
-                            "esptool.py not found in PATH. Is it installed? (pip install esptool)"
-                        );
-                    }
-                });
-                esptool.stdout.on("data", message => this.log(message.toString()));
-                esptool.stderr.on("data", message => this.error(message.toString()));
-                break;
+        const { args, flags } = output;
+        const versions_install = await get_versions();
+        if (!versions_install?.[args.ver]) {
+            this.error("Unknown version. (Fetch?)");
+        }
+
+        const file_path = path.join(ryder_firmware_directory, versions_install[args.ver].file);
+        const signature_install = versions_install[args.ver].signature;
+        let firmware_install;
+        try {
+            firmware_install = await fs.readFile(file_path);
+        } catch (error) {
+            if (error.code === "ENOENT") {
+                this.error(`Firmware file for version ${args.ver} not found, download first.`);
+            } else {
+                this.error(`${error}`);
+            }
+        }
+
+        if (!verify_firmware(signature_install, firmware_install)) {
+            this.error(`Firmware signature invalid for version ${args.ver}, refusing to install.`);
         }
 
         this.ryder_serial.close();
+        const esptool = spawn("esptool.py", [
+            "-p",
+            flags.ryder_port,
+            "write_flash",
+            "0x010000",
+            file_path,
+        ]);
+        esptool.on("error", (error: Error) => {
+            if (error.name === "ENOENT") {
+                this.log("esptool.py not found in PATH. Is it installed? (pip install esptool)");
+            }
+        });
+        esptool.stdout.on("data", message => this.log(message.toString()));
+        esptool.stderr.on("data", message => this.error(message.toString()));
     }
 }
