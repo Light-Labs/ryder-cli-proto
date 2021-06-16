@@ -37,7 +37,7 @@ export default class Export extends RyderCommand {
         if (!this.ryder_serial) {
             return;
         }
-        let commands: number[] = [];
+        const commands: number[] = [];
         if (args.what === "identity") commands.push(RyderSerial.COMMAND_EXPORT_PUBLIC_IDENTITY);
         else {
             // TODO: RyderSerial.COMMAND_EXPORT_OWNER_APP_KEY_PRIVATE_KEY

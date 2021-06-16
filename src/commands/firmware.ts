@@ -68,10 +68,9 @@ export default class Firmware extends RyderCommand {
 
     async run() {
         const { args, flags } = this.parse(Firmware);
-
         if (
-            args.action === "install" ||
-            (args.action === "download" && /^[0-9]+\.[0-9]+\.[0-9]+$/.test(args.ver))
+            (args.action === "install" || args.action === "download") &&
+            !/^[0-9]+\.[0-9]+\.[0-9]+$/.test(args.ver)
         ) {
             this.error(new Error("Version should be in the format X.Y.Z"), { exit: 1 });
         }
