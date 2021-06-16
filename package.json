@@ -1,7 +1,7 @@
 {
     "name": "@lightlabs/ryder-cli-proto",
     "version": "0.0.4",
-    "description": "",
+    "description": "A command-line interface to manage Ryder prototype devices.",
     "main": "lib/index.js",
     "oclif": {
         "commands": "./lib/commands",
