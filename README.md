@@ -42,7 +42,7 @@ $ npm install -g @lightlabs/ryder-cli-proto
 $ ryder-cli-proto COMMAND
 running command...
 $ ryder-cli-proto (-v|--version|version)
-@lightlabs/ryder-cli-proto/0.0.3 darwin-x64 node-v16.0.0
+@lightlabs/ryder-cli-proto/0.0.4 darwin-x64 node-v16.0.0
 $ ryder-cli-proto --help [COMMAND]
 USAGE
   $ ryder-cli-proto COMMAND
@@ -76,7 +76,7 @@ OPTIONS
   -h, --help                   show CLI help
 ```
 
-_See code: [src/commands/erase.ts](https://github.com/Light-Labs/ryder-cli-proto/blob/v0.0.3/src/commands/erase.ts)_
+_See code: [src/commands/erase.ts](https://github.com/Light-Labs/ryder-cli-proto/blob/v0.0.4/src/commands/erase.ts)_
 
 ## `ryder-cli-proto export WHAT ID_NUMBER [APP_DOMAIN]`
 
@@ -98,7 +98,7 @@ OPTIONS
   -k, --private_key=private_key  Include private key (if available)
 ```
 
-_See code: [src/commands/export.ts](https://github.com/Light-Labs/ryder-cli-proto/blob/v0.0.3/src/commands/export.ts)_
+_See code: [src/commands/export.ts](https://github.com/Light-Labs/ryder-cli-proto/blob/v0.0.4/src/commands/export.ts)_
 
 ## `ryder-cli-proto firmware ACTION [VER]`
 
@@ -118,7 +118,7 @@ OPTIONS
   -h, --help                   show CLI help
 ```
 
-_See code: [src/commands/firmware.ts](https://github.com/Light-Labs/ryder-cli-proto/blob/v0.0.3/src/commands/firmware.ts)_
+_See code: [src/commands/firmware.ts](https://github.com/Light-Labs/ryder-cli-proto/blob/v0.0.4/src/commands/firmware.ts)_
 
 ## `ryder-cli-proto help [COMMAND]`
 
@@ -158,7 +158,7 @@ EXAMPLES
   Initialised Ryder FW version 0.0.2 on /dev/ttys003
 ```
 
-_See code: [src/commands/info.ts](https://github.com/Light-Labs/ryder-cli-proto/blob/v0.0.3/src/commands/info.ts)_
+_See code: [src/commands/info.ts](https://github.com/Light-Labs/ryder-cli-proto/blob/v0.0.4/src/commands/info.ts)_
 
 ## `ryder-cli-proto restore`
 
@@ -176,7 +176,7 @@ OPTIONS
   --seed=seed                  seed as a number
 ```
 
-_See code: [src/commands/restore.ts](https://github.com/Light-Labs/ryder-cli-proto/blob/v0.0.3/src/commands/restore.ts)_
+_See code: [src/commands/restore.ts](https://github.com/Light-Labs/ryder-cli-proto/blob/v0.0.4/src/commands/restore.ts)_
 
 ## `ryder-cli-proto setup`
 
@@ -192,7 +192,7 @@ OPTIONS
   -h, --help                   show CLI help
 ```
 
-_See code: [src/commands/setup.ts](https://github.com/Light-Labs/ryder-cli-proto/blob/v0.0.3/src/commands/setup.ts)_
+_See code: [src/commands/setup.ts](https://github.com/Light-Labs/ryder-cli-proto/blob/v0.0.4/src/commands/setup.ts)_
 
 ## `ryder-cli-proto wake`
 
@@ -208,7 +208,7 @@ OPTIONS
   -h, --help                   show CLI help
 ```
 
-_See code: [src/commands/wake.ts](https://github.com/Light-Labs/ryder-cli-proto/blob/v0.0.3/src/commands/wake.ts)_
+_See code: [src/commands/wake.ts](https://github.com/Light-Labs/ryder-cli-proto/blob/v0.0.4/src/commands/wake.ts)_
 <!-- commandsstop -->
 
 # Firmware
