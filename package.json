@@ -29,6 +29,7 @@
         "prettier": "prettier --write .",
         "lint": "prettier --check . && eslint . --ext .ts --quiet",
         "build": "tsc -p .",
+        "dev": "tsc --watch -p .",
         "local": "npm i -g . && ryder-cli-proto",
         "refresh": "rm -rf ./node_modules ./package-lock.json && npm install"
     },
@@ -51,6 +52,8 @@
         "@oclif/config": "^1.17.0",
         "@oclif/plugin-help": "^3.2.2",
         "@oclif/test": "^1.2.8",
+        "@stacks/network": "^1.2.2",
+        "@stacks/transactions": "^3.0.0-beta.0",
         "@types/clear": "^0.1.1",
         "@types/figlet": "^1.5.1",
         "@types/inquirer": "^7.3.1",
@@ -60,7 +63,8 @@
         "figlet": "^1.5.0",
         "inquirer": "^8.1.0",
         "node-fetch": "^2.6.1",
-        "ryderserial-proto": "^0.0.2",
+        
+        "ryderserial-proto": "../ryderserial-proto",
         "tslib": "^1.14.1"
     },
     "devDependencies": {

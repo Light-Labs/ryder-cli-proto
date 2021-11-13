@@ -6,11 +6,6 @@ import chalk from "chalk";
 export default class Info extends RyderCommand {
     static description = "Read Ryder device information.";
 
-    static examples = [
-        `$ ryder-cli-proto info -R "/dev/ttys003"\nhello world from ./src/hello.ts!\n`,
-        `$ ryder-cli-proto info --ryder-port "/dev/ttys003"\nInitialised Ryder FW version 0.0.2 on /dev/ttys003`,
-    ];
-
     static flags = {
         ...RyderCommand.flags,
         help: flags.help({ char: "h" }),
