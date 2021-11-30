@@ -1,7 +1,7 @@
 import { flags } from "@oclif/command";
 import RyderSerial from "ryderserial-proto";
 import RyderCommand from "../base";
-import { principalFlag, networkFlag, networkFromString } from "../common";
+import { principalFlag, networkFlag, networkFromString, principalCVFromAddress } from "../common";
 import {
 	AnchorMode,
 	makeUnsignedSTXTokenTransfer,
@@ -35,7 +35,7 @@ export default class SendStx extends RyderCommand {
 		}
 		const stacksNetwork = networkFromString(network);
 		const options: UnsignedTokenTransferOptions = {
-			recipient,
+			recipient: principalCVFromAddress(recipient),
 			amount,
 			anchorMode: AnchorMode.OnChainOnly,
 			network: stacksNetwork,
