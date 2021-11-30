@@ -33,6 +33,8 @@ export default class SendStx extends RyderCommand {
 		if (!this.ryder_serial || !recipient) {
 			return;
 		}
+		if (account < 0 || account > 255)
+			throw new Error('account should be within 0-255');
 		const stacksNetwork = networkFromString(network);
 		const options: UnsignedTokenTransferOptions = {
 			recipient: principalCVFromAddress(recipient),
@@ -49,7 +51,10 @@ export default class SendStx extends RyderCommand {
 			options.fee = fee;
 		const transaction = await makeUnsignedSTXTokenTransfer(options);
 
-		const response = await this.ryder_serial.send(50); //FIXME use RyderSerial constant
+		const command = new Uint8Array(2);
+		command[0] = 50; //FIXME use RyderSerial constant
+		command[1] = account;
+		const response = await this.ryder_serial.send(command);
 		if (response === RyderSerial.RESPONSE_SEND_INPUT) {
 			const tx_bytes = transaction.serialize();
 			console.log('tx length', tx_bytes.byteLength);
