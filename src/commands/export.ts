@@ -73,8 +73,9 @@ export default class Export extends RyderCommand {
             }
         }
         if (args.what === "identity" && typeof response === 'string') {
-            console.log(getAddressFromPublicKey(response, TransactionVersion.Mainnet));
-            console.log(getAddressFromPublicKey(response, TransactionVersion.Testnet));
+            const buff = Buffer.from(response, 'binary');
+            console.log(getAddressFromPublicKey(buff, TransactionVersion.Mainnet));
+            console.log(getAddressFromPublicKey(buff, TransactionVersion.Testnet));
         }
         this.ryder_serial.close();
     }
