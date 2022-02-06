@@ -1,6 +1,8 @@
 import { flags } from "@oclif/command";
 import RyderCommand from "../base";
 import RyderSerial from "ryderserial-proto";
+import { getAddressFromPublicKey } from "@stacks/transactions";
+import { TransactionVersion } from "@stacks/common";
 
 export default class Export extends RyderCommand {
     static description = "Export an identity or key from a Ryder";
@@ -59,7 +61,7 @@ export default class Export extends RyderCommand {
         commands.push(args.id_number);
         let response = await this.ryder_serial.send(commands);
         if (args.what !== "app_key") {
-            console.log(response);
+            console.log(typeof response === 'number' ? response : Buffer.from(response, 'binary').toString('hex'));
         } else if (response !== RyderSerial.RESPONSE_SEND_INPUT) {
             console.log(
                 "Ryder did not request user input, it might doing something else or it is stuck in the wrong mode."
@@ -67,8 +69,13 @@ export default class Export extends RyderCommand {
         } else {
             response = await this.ryder_serial.send(args.app_domain + "\0");
             if (response !== RyderSerial.RESPONSE_REJECTED) {
-                console.log(response);
+                console.log(typeof response === 'number' ? response : Buffer.from(response, 'binary').toString('hex'));
             }
+        }
+        if (args.what === "identity" && typeof response === 'string') {
+            const buff = Buffer.from(response, 'binary');
+            console.log(getAddressFromPublicKey(buff, TransactionVersion.Mainnet));
+            console.log(getAddressFromPublicKey(buff, TransactionVersion.Testnet));
         }
         this.ryder_serial.close();
     }

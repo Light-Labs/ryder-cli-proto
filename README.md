@@ -42,7 +42,7 @@ $ npm install -g @lightlabs/ryder-cli-proto
 $ ryder-cli-proto COMMAND
 running command...
 $ ryder-cli-proto (-v|--version|version)
-@lightlabs/ryder-cli-proto/0.0.4 darwin-x64 node-v16.0.0
+@lightlabs/ryder-cli-proto/0.0.4 darwin-arm64 node-v15.3.0
 $ ryder-cli-proto --help [COMMAND]
 USAGE
   $ ryder-cli-proto COMMAND
@@ -59,6 +59,7 @@ USAGE
 * [`ryder-cli-proto help [COMMAND]`](#ryder-cli-proto-help-command)
 * [`ryder-cli-proto info`](#ryder-cli-proto-info)
 * [`ryder-cli-proto restore`](#ryder-cli-proto-restore)
+* [`ryder-cli-proto send-stx`](#ryder-cli-proto-send-stx)
 * [`ryder-cli-proto setup`](#ryder-cli-proto-setup)
 * [`ryder-cli-proto wake`](#ryder-cli-proto-wake)
 
@@ -149,13 +150,6 @@ OPTIONS
   -D, --debug
   -R, --ryder_port=ryder_port  (required) port of ryder device to connect to
   -h, --help                   show CLI help
-
-EXAMPLES
-  $ ryder-cli-proto info -R "/dev/ttys003"
-  hello world from ./src/hello.ts!
-
-  $ ryder-cli-proto info --ryder-port "/dev/ttys003"
-  Initialised Ryder FW version 0.0.2 on /dev/ttys003
 ```
 
 _See code: [src/commands/info.ts](https://github.com/Light-Labs/ryder-cli-proto/blob/v0.0.4/src/commands/info.ts)_
@@ -177,6 +171,26 @@ OPTIONS
 ```
 
 _See code: [src/commands/restore.ts](https://github.com/Light-Labs/ryder-cli-proto/blob/v0.0.4/src/commands/restore.ts)_
+
+## `ryder-cli-proto send-stx`
+
+Send STX a specified principal.
+
+```
+USAGE
+  $ ryder-cli-proto send-stx
+
+OPTIONS
+  -D, --debug
+  -R, --ryder_port=ryder_port          (required) port of ryder device to connect to
+  -h, --help                           show CLI help
+  --account=account                    (required) The account number to send from
+  --amount=amount                      (required) The amount in mSTX
+  --network=(mainnet|testnet|mocknet)  (required)
+  --recipient=recipient                (required) The principal to transfer the STX to
+```
+
+_See code: [src/commands/send-stx.ts](https://github.com/Light-Labs/ryder-cli-proto/blob/v0.0.4/src/commands/send-stx.ts)_
 
 ## `ryder-cli-proto setup`
 
