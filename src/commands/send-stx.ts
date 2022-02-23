@@ -52,7 +52,7 @@ export default class SendStx extends RyderCommand {
 		const transaction = await makeUnsignedSTXTokenTransfer(options);
 
 		const command = new Uint8Array(2);
-		command[0] = 50; //FIXME use RyderSerial constant
+		command[0] = RyderSerial.COMMAND_SIGN_TRANSACTION;
 		command[1] = account;
 		const response = await this.ryder_serial.send(command);
 		if (response === RyderSerial.RESPONSE_SEND_INPUT) {

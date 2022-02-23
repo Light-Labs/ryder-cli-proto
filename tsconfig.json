@@ -10,6 +10,6 @@
         "target": "es2017",
         "typeRoots": ["./node_modules/@types", "./dist/types/"]
     },
-    "include": ["src/**/*"],
+    "include": ["src/**/*", "test/commands/export.app_key.test.ts"],
     "exclude": ["node_modules"]
 }
