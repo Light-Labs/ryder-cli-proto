@@ -35,23 +35,23 @@ export default abstract class RyderCommand extends Command
         {
             debug = false;
         }
-
+        
         this.ryder_serial = new RyderSerial(flags.ryder_port, { debug });
-        if(process.env.hai == undefined)
+        if(process.env.registered == undefined)
         {
-            process.env.hai = "1";
-        process.on("unhandledRejection", error => 
-        {
-            console.error("unhandled rejection!", error);
-            try 
+            process.env.registered = "1";
+            process.on("unhandledRejection", error => 
             {
-                this.ryder_serial?.close();
-                //this.ryder_serial?.clear();
-            } 
-            catch (e) { /* error ignored */ }
-            process.exit(1);
-        });
-    }
+                console.error("unhandled rejection!", error);
+                try 
+                {
+                    this.ryder_serial?.close();
+                    //this.ryder_serial?.clear();
+                } 
+                catch (e) { /* error ignored */ }
+                process.exit(1);
+            });
+        }
 
         return new Promise(resolve => 
         {

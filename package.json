@@ -4,7 +4,7 @@
     "description": "A command-line interface to manage Ryder prototype devices.",
     "main": "lib/index.js",
     "oclif": {
-        "commands": "./lib/src/commands",
+        "commands": "./lib/commands",
         "bin": "ryder-cli-proto",
         "plugins": [
             "@oclif/plugin-help"
@@ -64,7 +64,7 @@
         "figlet": "^1.5.0",
         "inquirer": "^8.1.0",
         "node-fetch": "^2.6.1",
-        "ryderserial-proto": "^0.0.5",
+        "ryderserial-proto": "file:C:\\Users\\PaleBlue\\Documents\\GitHub\\ryderserial-proto",
         "tslib": "^1.14.1"
     },
     "devDependencies": {

@@ -187,7 +187,7 @@ describe("setup after erase", () =>
     test.stdout({print: false})
         .retries(3)
         .command(["test-accept-all", "-R", "MARVIN"])
-        .it('should return initialised Ryder information', (ctx) => 
+        .it('should return test-accept-all command validation (1)', (ctx) => 
         {
             expect(ctx.stdout).to.contain('1');
         });
