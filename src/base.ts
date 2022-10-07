@@ -8,14 +8,14 @@ export default abstract class RyderCommand extends Command {
 
     static flags = {
         ryder_port: flags.string({
-            char: "R",
+            char: "r",
             description: "port of ryder device to connect to",
             hidden: false,
             multiple: false,
             env: "RYDERSERIAL_PORT",
             required: true,
         }),
-        debug: flags.boolean({ char: "D" }),
+        debug: flags.boolean({ char: "d" }),
     };
 
     async init() {

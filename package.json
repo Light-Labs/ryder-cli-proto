@@ -47,6 +47,7 @@
     },
     "homepage": "https://github.com/Light-Labs/ryder-cli-proto#readme",
     "dependencies": {
+        "@lightlabs/ryderserial-proto": "^0.0.5",
         "@oclif/command": "^1.8.0",
         "@oclif/config": "^1.17.0",
         "@oclif/plugin-help": "^3.2.2",
@@ -61,7 +62,8 @@
         "inquirer": "^8.1.0",
         "node-fetch": "^2.6.1",
         "ryderserial-proto": "^0.0.2",
-        "tslib": "^1.14.1"
+        "tslib": "^1.14.1",
+        "unzipper": "^0.10.11"
     },
     "devDependencies": {
         "@types/chai": "^4.2.18",

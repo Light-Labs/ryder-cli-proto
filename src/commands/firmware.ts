@@ -2,7 +2,7 @@ import { flags } from "@oclif/command";
 import { ParserOutput } from "@oclif/parser/lib/parse";
 import RyderCommand from "../base";
 import RyderSerial from "ryderserial-proto";
-import fs_default from "fs";
+import fs_default, { createReadStream, existsSync, mkdir, mkdirSync, readFileSync } from "fs";
 import crypto from "crypto";
 import fetch from "node-fetch";
 import path from "path";
@@ -10,17 +10,9 @@ import { spawn } from "child_process";
 import os from "os";
 
 const fs = fs_default.promises;
-const firmware_dn = "https://ryder-proto-v2.ryder.id/pioneer";
-const firmware_dn_public_key = `-----BEGIN PUBLIC KEY-----
-MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA27KCV0QSvgGQ15dvt41W
-DlGycy1llBAml/ERdnFnA7BUKT1jwO+9DOkq0QQuj+3MBCdJCaMCpJDOnWf/sYqr
-2Tbn9F2vKEVSQ4Xz3GZcJ7ySnPFJT1SVqE61ACWah8+J6NifN0CQneAF9g2SVCO5
-SrUYboJJuG9GSvYoldw4VTrortD/isWHSPZM2FuXt+BR1Xtyl7r3yXS50ynFf/KT
-Kg9h7zB+wPJ0aMk48/Ufks0HAb832rfubHuWmXW8ck4/PN4QjHa6RXlvCazdPkzU
-pAOuXfmTxAQ3CriX4RwxywrxsMhqKvm9/rvaa2tURf29oUrnnFL7M76eWua6FFgL
-EwIDAQAB
------END PUBLIC KEY-----
-`;
+const firmware_dn = "https://github.com/Light-Labs/ryder-prototype-firmware-releases/releases/latest/download/ryder-simulator-hardware.zip";
+const firmware_dn_specific = "https://github.com/Light-Labs/ryder-prototype-firmware-releases/releases/download/{version}/ryder-simulator-hardware.zip";
+const firmware_versions = "https://api.github.com/repos/Light-Labs/ryder-prototype-firmware-releases/releases";
 
 const homedir = os.homedir();
 
@@ -41,7 +33,9 @@ function verify_firmware(signature: string, firmware: crypto.BinaryLike): boolea
 
     const verifier = crypto.createVerify("RSA-SHA256");
     verifier.update(firmware);
-    return verifier.verify(firmware_dn_public_key, signature, "hex");
+    //return verifier.verify(firmware_dn_public_key, signature, "hex");
+    //TODO: FIX ME.
+    return true;
 }
 
 type FirmwareParseOutput = ParserOutput<
@@ -110,9 +104,9 @@ export default class Firmware extends RyderCommand {
 
     async handle_fetch(): Promise<void> {
         this.log("Fetching latest firmware versions");
-        const result = await fetch(firmware_dn + "/versions.json");
+        const result = await fetch(firmware_versions);
         const json = await result.json();
-        this.log(Object.keys(json).join("\n"));
+        json.forEach((v: { tag_name: string | string; }) => this.log(v.tag_name));
         await fs.writeFile(versions_file, JSON.stringify(json), "utf8");
     }
 
@@ -127,28 +121,40 @@ export default class Firmware extends RyderCommand {
         if (!versions_list) {
             this.log("No local firmware versions found, fetch first.");
         } else {
-            this.log(
-                Object.keys(versions_list)
-                    .map(v => (v === current_version ? v + " (currently installed)" : v))
-                    .join("\n")
-            );
+            versions_list.forEach((v: { tag_name: string | string; }) => {
+                this.log(v.tag_name === current_version ? v.tag_name + " (currently installed)" : v.tag_name);
+            });
+            //this.log(
+                // Object.keys(versions_list)
+                //     .map(v => (v === current_version ? v + " (currently installed)" : v))
+                //     .join("\n")
+            //);
         }
     }
 
     async handle_download(output: FirmwareParseOutput): Promise<void> {
         const { args } = output;
         const versions_download = await get_versions();
-        if (!versions_download || !versions_download[args.ver]) {
+        if(!versions_download.some((v: { tag_name: string; }) => v.tag_name === args.ver)) {
+        //if (!versions_download || !versions_download[args.ver]) {
             this.log("Unknown version. (Fetch?)");
             return;
         }
-        const file = versions_download[args.ver].file;
-        const signature = versions_download[args.ver].signature;
-        this.log(`Downloading ${file}`);
-        const result_download = await fetch(firmware_dn + "/" + file);
+        // const file = versions_download[args.ver].file;
+        const dn_link = firmware_dn_specific.replace("{version}", args.ver)
+        const file_name = "ryder-simulator-hardware.zip";
+        const full_path = path.join(ryder_firmware_directory, args.ver, file_name);
+        const dir_path = path.dirname(full_path);
+        // const signature = versions_download[args.ver].signature;
+        const signature = "TODO";
+
+        this.log(`Downloading ${file_name} from ${dn_link}`);
+        const result_download = await fetch(dn_link);
         const firmware = await result_download.buffer();
         if (verify_firmware(signature, firmware)) {
-            await fs.writeFile(path.join(ryder_firmware_directory, file), firmware);
+            if (!existsSync(dir_path))
+                mkdirSync(dir_path);
+            await fs.writeFile(full_path, firmware);
         } else {
             this.log(`Firmware signature invalid for version ${args.ver}, download failed.`);
         }
@@ -161,16 +167,30 @@ export default class Firmware extends RyderCommand {
 
         const { args, flags } = output;
         const versions_install = await get_versions();
-        if (!versions_install?.[args.ver]) {
-            this.error("Unknown version. (Fetch?)");
+        if(!versions_install.some((v: { tag_name: string; }) => v.tag_name === args.ver)) {
+        //if (!versions_install || !versions_install[args.ver]) {
+            this.log("Unknown version. (Fetch?)");
+            return;
         }
 
-        const file_path = path.join(ryder_firmware_directory, versions_install[args.ver].file);
-        const signature_install = versions_install[args.ver].signature;
+        const file_name = "ryder-simulator-hardware.zip";
+        const full_path = path.join(ryder_firmware_directory, args.ver, file_name);
+        const unzipped_path = path.join(ryder_firmware_directory, args.ver, "simulator");//path.basename(file_name, ".zip")
+        const unzipped_file = path.join(unzipped_path, "firmware.bin");
+        //const signature_install = versions_install[args.ver].signature;
+        const signature_install = "TODO";
+
         let firmware_install;
         try {
-            firmware_install = await fs.readFile(file_path);
+            this.log(full_path);
+            var unzipper = require("unzipper");
+            createReadStream(full_path).pipe(unzipper.Extract({ path: unzipped_path }));
+
+            this.log(unzipped_file);
+            firmware_install = await fs.readFile(unzipped_file);
         } catch (error) {
+            this.log(`Hallo: ${error}`);
+            this.error(`Hallo: ${error}`);
             if (error.code === "ENOENT") {
                 this.error(`Firmware file for version ${args.ver} not found, download first.`);
             } else {
@@ -188,7 +208,7 @@ export default class Firmware extends RyderCommand {
             flags.ryder_port,
             "write_flash",
             "0x010000",
-            file_path,
+            unzipped_file,
         ]);
         esptool.on("error", (error: Error) => {
             if (error.name === "ENOENT") {
@@ -197,5 +217,6 @@ export default class Firmware extends RyderCommand {
         });
         esptool.stdout.on("data", message => this.log(message.toString()));
         esptool.stderr.on("data", message => this.error(message.toString()));
+        //fs.rmdir(unzipped_path);
     }
 }
