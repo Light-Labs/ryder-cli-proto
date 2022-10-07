@@ -48,7 +48,7 @@
     },
     "homepage": "https://github.com/Light-Labs/ryder-cli-proto#readme",
     "dependencies": {
-        "@lightlabs/ryderserial-proto": "^0.0.5",
+        "ryderserial-proto": "file:C:\\Users\\PaleBlue\\Documents\\GitHub\\ryder-client",
         "@oclif/command": "^1.8.16",
         "@oclif/config": "^1.17.0",
         "@oclif/help": "^1.0.1",
@@ -65,7 +65,6 @@
         "figlet": "^1.5.0",
         "inquirer": "^8.1.0",
         "node-fetch": "^2.6.1",
-        "ryderserial-proto": "^0.0.5",
         "tslib": "^1.14.1",
         "unzipper": "^0.10.11"
     },
