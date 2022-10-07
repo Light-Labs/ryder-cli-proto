@@ -14,7 +14,9 @@ export default class Erase extends RyderCommand {
         if (!this.ryder_serial) {
             return;
         }
-        await this.ryder_serial.send(RyderSerial.COMMAND_ERASE);
+        const response = await this.ryder_serial.send(RyderSerial.COMMAND_ERASE);
+        const info = typeof response === "number" ? response.toString() : response;
+        this.log(`${info}`);
         this.ryder_serial.close();
     }
 }
